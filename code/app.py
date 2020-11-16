@@ -1,29 +1,43 @@
 import json
 import sklearn
-import pickle
+import joblib
 import boto3
 import os
 
 s3 = boto3.resource('s3')
-# example code to load a model
-print('loading model...')
-model = pickle.loads(s3.Bucket(os.getenv('s3Bucket')).Object(os.getenv('modelToLoad')).get()['Body'].read())
+models = {
+    'alcohol': None,
+    'tobacco': None
+}
 
-def get_prediction():
-    # example code to run the model
-    print('getting prediction...')
-    result = model.predict([[5.9,3.0,5.1,1.8]])[0]
-    print(result)
+def download_file(filename):
+    print(f'downloading {filename}...')
+    filepath = f'/tmp/{filename}'
+    s3.meta.client.download_file(os.getenv('s3Bucket'), filename, filepath)
+    return filepath
+
+def get_prediction(params):
+    model_type = params['type']
+    input_data = params['input']
+    if models[model_type] == None:
+        print(f'loading model for type {model_type} ...')
+        filepath = download_file(os.getenv(model_type))
+        models[model_type] = joblib.load(open(filepath, 'rb'))
+    # example input_data: [11, 1, 991, 1, 1, 1, 1, 1, 2]
+    result = models[model_type].predict([input_data])[0]
     return result
 
 def lambda_handler(event, context):
+    params = event['queryStringParameters']
+    print('params:')
+    print(params)
+    params['input'] = json.loads(params['input'])
     return {
         'headers': {
             'Access-Control-Allow-Origin': '*'
         },
         'statusCode': 200,
         'body': json.dumps({
-            'output': f'{get_prediction()}',
-            'parameters': event['queryStringParameters']
+            'output': f'{get_prediction(params)}'
         }),
     }

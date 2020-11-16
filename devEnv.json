@@ -1,6 +1,7 @@
 {
     "PredictFunction": {
         "s3Bucket": "test-model-dev",
-        "modelToLoad": "iris_trained_model.pkl"
+        "alcohol": "clf_alcohol.pkl",
+        "tobacco": "clf_tobacco.pkl"
     }
 }

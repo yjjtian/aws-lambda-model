@@ -58,7 +58,8 @@ Resources:
       Environment:
         Variables:
           s3Bucket: !Ref ModelBucket
-          modelToLoad: iris_trained_model.pkl
+          alcohol: clf_alcohol.pkl
+          tobacco: clf_tobacco.pkl
       Events:
         Predict:
           Type: Api
