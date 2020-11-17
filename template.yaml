@@ -59,6 +59,11 @@ Resources:
         Variables:
           s3Bucket: !Ref ModelBucket
           alcohol: clf_alcohol.pkl
+          cocever: clf_cocever.pkl
+          crkever: clf_crkever.pkl
+          herever: clf_herever.pkl
+          impsoc: clf_impsoc.pkl
+          metha: clf_metha.pkl
           tobacco: clf_tobacco.pkl
       Events:
         Predict:
