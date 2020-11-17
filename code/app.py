@@ -5,10 +5,7 @@ import boto3
 import os
 
 s3 = boto3.resource('s3')
-models = {
-    'alcohol': None,
-    'tobacco': None
-}
+models = {}
 
 def download_file(filename):
     print(f'downloading {filename}...')
@@ -19,7 +16,7 @@ def download_file(filename):
 def get_prediction(params):
     model_type = params['type']
     input_data = params['input']
-    if models[model_type] == None:
+    if model_type not in models:
         print(f'loading model for type {model_type} ...')
         filepath = download_file(os.getenv(model_type))
         models[model_type] = joblib.load(open(filepath, 'rb'))
