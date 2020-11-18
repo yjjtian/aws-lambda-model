@@ -65,6 +65,7 @@ Resources:
           impsoc: clf_impsoc.pkl
           metha: clf_metha.pkl
           tobacco: clf_tobacco.pkl
+          impwork: clf_impwork.pkl
       Events:
         Predict:
           Type: Api
